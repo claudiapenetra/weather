@@ -1,0 +1,47 @@
+public class MainActivity extends AppCompatActivity {
+
+    private TextView cityText;
+    private TextView tempText;
+    private TextView weatherText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        cityText = findViewById(R.id.city_text);
+        tempText = findViewById(R.id.temp_text);
+        weatherText = findViewById(R.id.weather_text);
+
+        // Get the current location of the device
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        String locationProvider = LocationManager.GPS_PROVIDER;
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+
+        // Get the current weather for the device's location
+        WeatherTask weatherTask = new WeatherTask();
+        weatherTask.execute(lastKnownLocation);
+    }
+
+    private class WeatherTask extends AsyncTask<Location, Void, Weather> {
+        @Override
+        protected Weather doInBackground(Location... locations) {
+            Location location = locations[0];
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
+
+            // Use a weather API to get the current weather for the given location
+            // ...
+
+            return weather;
+        }
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            // Update the UI with the current weather
+            cityText.setText(weather.city);
+            tempText.setText(weather.temperature);
+            weatherText.setText(weather.description);
+        }
+    }
+}
